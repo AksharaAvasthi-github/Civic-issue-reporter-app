@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Float
 from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey
 from sqlalchemy.orm import relationship
 # models.py
-from database import Base  # 🔁 remove the dot
+from database import Base  
 
 
 class Prediction(Base):
@@ -19,8 +19,8 @@ class Prediction(Base):
     city = Column(String)
     area = Column(String)
     status = Column(String, default="Reported")
-    latitude = Column(Float, nullable=True)   # ✅ Add this
-    longitude = Column(Float, nullable=True)  # ✅ And 
+    latitude = Column(Float, nullable=True)  
+    longitude = Column(Float, nullable=True)  
 
    
 # models.py
