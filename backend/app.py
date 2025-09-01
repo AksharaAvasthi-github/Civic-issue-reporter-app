@@ -53,7 +53,7 @@ def submit_issue():
 
 @app.route('/')
 def home():
-    return '✅ Civic ML Flask API is up and running!'
+    return 
 
 if __name__ == '__main__':
     app.run(debug=True)
