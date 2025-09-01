@@ -2,3 +2,4 @@
 *.pth
 *.h5
 *.pth
+ml/garbage_vs_pothole_cnn.h5
