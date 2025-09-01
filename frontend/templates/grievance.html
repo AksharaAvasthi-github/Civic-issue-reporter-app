@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Raise or Track Grievance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- ✅ Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <!-- ✅ Leaflet JS (add this) -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  </script>
+  <style>
+    /* Base & Body */
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      margin: 0; padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      color: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* NAVBAR */
+    nav {
+      background: rgba(32, 58, 67, 0.95);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      padding: 1rem 2rem;
+      color: #00cec9;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      font-weight: 700;
+      font-size: 1.5rem;
+      user-select: none;
+      width: 100%;
+      box-sizing: border-box;
+      justify-content: center;
+    }
+
+    /* Container - flex for side-by-side boxes */
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      padding: 2rem;
+      display: flex;
+      gap: 2rem;
+      box-sizing: border-box;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Individual form box */
+    .form-box {
+      background: rgba(0,0,0,0.5);
+      border-radius: 12px;
+      padding: 2rem 2.5rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      flex: 1 1 450px; /* grow and shrink with min width */
+      box-sizing: border-box;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h2 {
+      color: #00cec9;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 8px #00cec9aa;
+      text-align: center;
+    }
+
+    /* Form styling */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.3rem;
+      flex-grow: 1;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+   input[type="text"],
+input[type="file"],
+select,
+textarea {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  background: rgba(50, 50, 50, 0.7); /* translucent gray */
+  color: #00ffff; /* neon blue text */
+  resize: vertical;
+}
+
+    input[type="text"]::placeholder,
+    textarea::placeholder {
+      color: #bbb;
+    }
+
+    textarea {
+      min-height: 80px;
+    }
+
+    input[type="submit"] {
+      background: linear-gradient(135deg, #00cec9, #00b6b6);
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #000;
+      box-shadow: 0 6px 18px rgba(0, 206, 201, 0.4);
+      transition: all 0.3s ease;
+      margin-top: auto;
+    }
+
+    input[type="submit"]:hover {
+      background: linear-gradient(135deg, #00b6b6, #00a8a8);
+      transform: translateY(-2px);
+      color: #000;
+    }
+
+    /* Message boxes */
+    .message {
+      font-weight: 600;
+      font-size: 1rem;
+      min-height: 1.5rem;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+    .message.success {
+      color: lightgreen;
+      text-shadow: 0 0 5px lightgreen;
+    }
+    .message.error {
+      color: #ff6b6b;
+      text-shadow: 0 0 5px #ff6b6b;
+    }
+
+    /* Flowchart for tracking grievance */
+    .flowchart {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      user-select: none;
+      flex-wrap: wrap;
+      gap: 2rem;
+      white-space: nowrap;
+    }
+
+    .step {
+      flex: 1;
+      position: relative;
+      text-align: center;
+      font-weight: 700;
+      color: #999;
+      min-width: 80px;
+      margin: 0 5px;
+      font-size: 0.8rem;
+    }
+
+    .step.active {
+      color: #00cec9;
+      text-shadow: 0 0 8px #00cec9aa;
+    }
+
+    /* Circles */
+    .step .circle {
+      width: 30px;
+      height: 30px;
+      margin: 0 auto 8px auto;
+      border-radius: 50%;
+      border: 3px solid #444;
+      background-color: #222;
+      line-height: 24px;
+      font-size: 1.1rem;
+      color: #999;
+      transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+
+    .step.active .circle {
+      background-color: #00cec9;
+      border-color: #00cec9;
+      color: #000;
+      box-shadow: 0 0 10px #00cec9aa;
+    }
+
+    /* Lines between circles */
+    .step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 14px;
+      right: 0;
+      width: 100%;
+      height: 3px;
+      background: #444;
+      z-index: -1;
+      margin-left: 15px;
+      margin-right: -50%;
+      transform: translateX(50%);
+    }
+    .step.active:not(:last-child)::after {
+      background: #00cec9;
+      box-shadow: 0 0 8px #00cec9aa;
+    }
+
+    
+      #map {
+  height: 300px;
+  width: 100%;
+  margin-top: 1rem;
+  border: 1px solid #ccc;
+}
+
+.status-info-card {
+  background-color: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  font-size: 1rem;
+  box-shadow: 0 6px 16px rgba(0, 206, 201, 0.25);
+  color: #f0f0f0;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.status-info-card h4 {
+  margin-bottom: 0.5rem;
+  color: #00cec9;
+}
+
+.status-info-card ul {
+  padding-left: 1.2rem;
+}
+
+.status-info-card li {
+  margin-bottom: 0.6rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+
+  </style>
+</head>
+<body>
+<nav>
+  <div class="title"><i class="fas fa-bullhorn"></i> Raise or Track Grievance</div>
+</nav>
+
+
+  <div class="container">
+    <div class="form-box">
+      <h2>Raise a Grievance</h2>
+      <form id="raiseForm" enctype="multipart/form-data">
+        <label for="complaint_text">Describe your issue</label>
+        <textarea id="complaint_text" name="complaint_text" placeholder="Explain the problem here..." required></textarea>
+
+        <label for="image">Upload an image</label>
+        <input type="file" id="image" name="image" accept="image/*" />
+        <label for="map">Select Issue Location on Map</label>
+        <div id="map" style="height: 300px; border-radius: 10px; margin-bottom: 1rem;"></div>
+        <input type="hidden" id="latitude" name="latitude" />
+        <input type="hidden" id="longitude" name="longitude" />
+
+
+
+
+        <input type="submit" value="Submit Grievance" />
+        <div id="raiseMessage" class="message"></div>
+      </form>
+    </div>
+
+  <div class="form-box">
+  <h2>Track a Grievance</h2>
+
+  <form id="trackForm">
+    <!-- 1. Grievance Input -->
+    <label for="grievance_number">Enter Grievance Number</label>
+    <input type="text" id="grievance_number" name="grievance_number" placeholder="e.g. ABC12345" required />
+
+    <!-- 2. Instruction Card -->
+    <div class="status-info-card">
+      <h4>Grievance Status Guide</h4>
+      <ul>
+        <li><strong>🟡 Reported:</strong> Your complaint has been successfully submitted.</li>
+        <li><strong>📥 Acknowledged:</strong> Authorities have received your grievance and are reviewing it.</li>
+        <li><strong>🔧 In Progress:</strong> Work is currently being done to resolve the issue.</li>
+        <li><strong>✅ Completed:</strong> The issue has been resolved. Thank you for your patience!</li>
+      </ul>
+    </div>
+
+    <!-- 3. Submit Button -->
+    <input type="submit" value="Track" />
+
+    <!-- 4. Track Message -->
+    <div id="trackMessage" class="message"></div>
+  </form>
+
+  <!-- ✅ 5. FLOWCHART (inside the card now) -->
+  <div class="flowchart" id="flowchart" style="display: none; margin-top: 1.5rem;">
+    <div class="step" id="step-reported">
+      <div class="circle">1</div>
+      Reported
+    </div>
+    <div class="step" id="step-acknowledged">
+      <div class="circle">2</div>
+      Acknowledged
+    </div>
+    <div class="step" id="step-inprogress">
+      <div class="circle">3</div>
+      In Progress
+    </div>
+    <div class="step" id="step-completed">
+      <div class="circle">4</div>
+      Completed
+    </div>
+  </div>
+</div>
+
+
+<script>
+  const raiseForm = document.getElementById('raiseForm');
+  const raiseMsg = document.getElementById('raiseMessage');
+  const trackForm = document.getElementById('trackForm');
+  const trackMsg = document.getElementById('trackMessage');
+  const flowchart = document.getElementById('flowchart');
+  const steps = {
+    reported: document.getElementById('step-reported'),
+    acknowledged: document.getElementById('step-acknowledged'),
+    inprogress: document.getElementById('step-inprogress'),
+    completed: document.getElementById('step-completed'),
+  };
+
+  raiseForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  raiseMsg.textContent = '';
+  const formData = new FormData(raiseForm);
+
+  try {
+    const res = await fetch('/add_grievance', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await res.json();  // ✅ Fix: move before console.log
+    console.log("Server response:", data);
+
+    if (res.ok) {
+      raiseMsg.textContent = `Grievance submitted! Your grievance number is: ${data.grievance_number}`;
+      raiseMsg.className = 'message success';
+      raiseForm.reset();
+    } else {
+      raiseMsg.textContent = data.detail || 'Failed to submit grievance.';
+      raiseMsg.className = 'message error';
+    }
+  } catch (error) {
+    console.error("Submission error:", error);  // Optional logging
+    raiseMsg.textContent = 'Network error, please try again later.';
+    raiseMsg.className = 'message error';
+  }
+});
+
+  document.addEventListener("DOMContentLoaded", function () {
+  const map = L.map('map').setView([20.5937, 78.9629], 5); // Center on India
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  let marker;
+  map.on('click', function (e) {
+    const { lat, lng } = e.latlng;
+    document.getElementById('latitude').value = lat;
+    document.getElementById('longitude').value = lng;
+
+    if (marker) {
+      marker.setLatLng([lat, lng]);
+    } else {
+      marker = L.marker([lat, lng]).addTo(map);
+    }
+  });
+});
+
+  trackForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    trackMsg.textContent = '';
+    flowchart.style.display = 'none';
+
+    const grievance_number = trackForm.grievance_number.value.trim();
+
+    if (!grievance_number) {
+      trackMsg.textContent = 'Please enter a grievance number.';
+      trackMsg.className = 'message error';
+      return;
+    }
+
+    try {
+      const res = await fetch(`/track_grievance?grievance_number=${encodeURIComponent(grievance_number)}`);
+      if (res.ok) {
+        const data = await res.json();
+        trackMsg.textContent = `Status: ${data.status}`;
+        trackMsg.className = 'message success';
+
+        // Reset all steps
+        Object.values(steps).forEach(step => step.classList.remove('active'));
+
+        // Mark the current status step active
+        switch(data.status.toLowerCase()) {
+          case 'reported':
+            steps.reported.classList.add('active');
+            break;
+          case 'acknowledged':
+            steps.reported.classList.add('active');
+            steps.acknowledged.classList.add('active');
+            break;
+          case 'in progress':
+            steps.reported.classList.add('active');
+            steps.acknowledged.classList.add('active');
+            steps.inprogress.classList.add('active');
+            break;
+          case 'completed':
+            Object.values(steps).forEach(step => step.classList.add('active'));
+            break;
+          default:
+            steps.reported.classList.add('active');
+        }
+
+        flowchart.style.display = 'flex';
+      } else {
+        const err = await res.json();
+        trackMsg.textContent = err.detail || 'Grievance not found.';
+        trackMsg.className = 'message error';
+      }
+    } catch (error) {
+      trackMsg.textContent = 'Network error, please try again later.';
+      trackMsg.className = 'message error';
+    }
+  });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>City Civic Issue Reporter</title>
+
+  <!-- Google Fonts -->
+   <!-- Swiper CSS -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
+/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" />
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Swiper.js CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+  
+
+  <style>
+    /* BODY & GENERAL */
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      color: #f0f0f0;
+      overflow-x: hidden;
+    }
+
+    /* NAVBAR */
+    nav {
+      background: rgba(32, 58, 67, 0.95);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      color: #00cec9;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      flex-wrap: wrap;
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.6rem;
+      font-weight: bold;
+    }
+
+    .logo-icon {
+      font-size: 1.8rem;
+      animation: float 3s ease-in-out infinite;
+      color: #00cec9;
+    }
+
+    .logo-text {
+      letter-spacing: 1px;
+      color: #00cec9;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      background-color: rgba(0, 206, 201, 0.2);
+      box-shadow: 0 4px 15px rgba(0, 206, 201, 0.4);
+      color: #00cec9;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    /* SEARCH BAR */
+    .full-width-search {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .full-width-search form {
+      display: flex;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0;
+      padding: 1rem 2rem;
+      gap: 1rem;
+    }
+
+    .full-width-search input[type="text"] {
+      flex: 1;
+      padding: 0.9rem 1.2rem;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      font-family: 'Montserrat', sans-serif;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+    }
+
+    .full-width-search input::placeholder {
+      color: #ccc;
+    }
+
+    .full-width-search button {
+      padding: 0.9rem 1.4rem;
+      font-weight: 600;
+      font-family: 'Montserrat', sans-serif;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #00cec9, #00b6b6);
+      color: #000;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 206, 201, 0.3);
+    }
+
+    .full-width-search button:hover {
+      background: linear-gradient(135deg, #00b6b6, #00a8a8);
+      color: #000;
+      transform: translateY(-1px);
+    }
+
+    /* SLIDESHOW */
+    .swiper {
+      height: 500px;
+      width: 100%;
+      margin-bottom: 2rem;
+      border-top: 4px solid rgba(0, 206, 201, 0.6);
+      border-bottom: 4px solid rgba(0, 206, 201, 0.6);
+      box-shadow: 0 0 15px rgba(0, 206, 201, 0.2);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .swiper-slide {
+      position: relative;
+    }
+
+    .swiper-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .swiper-pagination-bullet-active {
+      background-color: #00cec9 !important;
+    }
+
+    .swiper-slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+      z-index: 1;
+    }
+
+    .slide-caption {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      color: white;
+      max-width: 60%;
+      animation: fadeInUp 1s ease-out;
+      z-index: 2;
+    }
+
+    .slide-caption h2 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .slide-caption p {
+      margin-top: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* INFO SECTION */
+    .info-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto 3rem auto;
+    }
+
+    .info-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(14px);
+      border-left: 4px solid #00cec9;
+      border-radius: 16px;
+      padding: 1.2rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      color: #f0f0f0;
+      box-sizing: border-box;
+
+      width: 380px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      height: 290px;  /* fixed height to increase length */
+
+      scrollbar-width: thin;
+      scrollbar-color: #00cec9 transparent;
+      transition: transform 0.3s ease;
+      cursor: default;
+    }
+
+    .info-card::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .info-card::-webkit-scrollbar-thumb {
+      background-color: #00cec9;
+      border-radius: 10px;
+      border: 2px solid transparent;
+      background-clip: content-box;
+    }
+
+    .info-card::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+
+    .info-card h2 {
+  font-weight: 700;        /* Make it extra bold */
+  font-size: 1.8rem;       /* Slightly bigger */
+  color: #00cec9;          /* Keep your accent color */
+  text-transform: none; /* Optional: all caps for emphasis */
+  letter-spacing: 1.5px;   /* Add some spacing between letters */
+  margin-bottom: 3rem;   /* Space below heading */
+  text-shadow: 0 0 8px #00cec9aa; /* subtle glow effect */
+}
+
+
+    .info-card p {
+      font-style: italic;
+      margin: 0;
+      flex-grow: 1;
+    }
+
+    .info-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 30px rgba(0, 206, 201, 0.4);
+      border-left: 4px solid #00e6e6;
+    }
+
+    /* HERO SECTION */
+    .hero-section {
+  width: 100%;
+  padding: 4rem 2rem 3rem 2rem;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2), transparent);
+  display: flex;
+  justify-content: center; /* centers horizontally */
+  align-items: center;     /* centers vertically */
+  text-align: center;
+  color: #f0f0f0;
+  margin-bottom: 3rem;
+  box-sizing: border-box;  /* include padding in width */
+}
+
+.hero-content {
+  max-width: 900px;
+  width: 100%;             /* take full width up to max-width */
+  padding: 0 1rem;         /* some horizontal padding */
+  margin: 0 auto;          /* center horizontally */
+  box-sizing: border-box;
+}
+.hero-content h1 {
+  font-size: 4rem; /* or any size you prefer */
+  line-height: 1.1; /* keeps line spacing tight */
+}
+
+.hero-content p {
+  font-size: 1.6rem;
+  line-height: 1.4;
+}
+.hero-section {
+  padding: 6rem 2rem 5rem 2rem; /* more top and bottom padding */
+}
+.hero-content {
+  max-width: 900px;
+  width: 100%;
+  padding: 2rem 3rem; /* more padding inside the box */
+  margin: 0 auto;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.5); /* translucent black */
+  border-radius: 12px; /* rounded corners */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6); /* subtle shadow for depth */
+}
+
+.hero-divider {
+  position: relative;
+  margin-top: -3rem; /* adjust if needed */
+  z-index: 1;
+  overflow: hidden;
+}
+
+.hero-divider svg {
+  display: block;
+  width: 100%;
+  height: 80px;
+}
+
+
+
+
+
+    /* STATS SECTION */
+    .stats-section {
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      padding-bottom: 4rem;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 0 auto 4rem auto;
+      color: #00cec9;
+      font-weight: 600;
+      text-shadow: 0 0 8px #00cec9;
+    }
+
+    .stat {
+      font-size: 2.6rem;
+      text-align: center;
+      flex: 1 1 200px;
+      cursor: default;
+      transition: transform 0.25s ease;
+      user-select: none;
+    }
+
+    .stat:hover {
+      color: #ffffff;
+      text-shadow: 0 0 15px #00fff7;
+      transform: scale(1.15);
+    }
+
+    .stat-label {
+      font-weight: 400;
+      font-size: 1.3rem;
+      display: block;
+      margin-top: 0.5rem;
+      color: #00cec9cc;
+    }
+    .report-btn {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #00cec9, #00b6b6);
+  color: #000;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(0, 206, 201, 0.4);
+  transition: all 0.3s ease;
+}
+.report-btn:hover {
+  background: linear-gradient(135deg, #00b6b6, #00a8a8);
+  transform: translateY(-2px);
+}
+
+/* Title Above Testimonial Bar */
+.testimonial-heading {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2rem;
+  font-weight: 700; /* This is bold */
+  color: #fff;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+
+/* Container for Testimonial Marquee Bar */
+.testimonial-marquee {
+  width: 100%;
+  background-color: #111; /* Black background for the bar */
+  padding: 80px 0; /* Increased padding for more height */
+  position: relative;
+  overflow: hidden; /* Hide text overflow */
+  
+  /* Neon Borders for Top and Bottom */
+  border-top: 2px solid #0ff;  /* Neon cyan top border */
+  border-bottom: 2px solid #0ff; /* Neon cyan bottom border */
+  box-shadow: 0 0 15px 3px #0ff; /* Neon glow effect */
+}
+
+/* Wrapper for Scrolling Testimonials */
+.testimonial-items {
+  display: flex;
+  white-space: nowrap; /* Keep testimonials in one line */
+  animation: scroll-left 15s linear infinite; /* Smooth scrolling animation */
+}
+
+/* Individual Testimonial Styling */
+.testimonial {
+  padding: 10px 20px; /* Padding for each testimonial */
+  font-size: 2rem;  /* Slightly larger text size for better visibility */
+  color: #0ff; /* Neon cyan color */
+  background-color: #111; /* Same black background */
+  margin-right: 50px; /* Space between testimonials */
+}
+
+/* Animation for scrolling testimonials */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(100%); /* Start from the right */
+  }
+  100% {
+    transform: translateX(-100%); /* Scroll to the left */
+  }
+}
+
+/* STATS SECTION */
+.stats-section {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  padding-bottom: 4rem;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto 4rem auto;
+  color: #00cec9;
+  font-weight: 600;
+  text-shadow: 0 0 8px #00cec9;
+}
+
+.stat {
+  font-size: 2.6rem;
+  text-align: center;
+  flex: 1 1 200px;
+  cursor: default;
+  transition: transform 0.25s ease;
+  user-select: none;
+}
+
+.stat:hover {
+  color: #ffffff;
+  text-shadow: 0 0 15px #00fff7;
+  transform: scale(1.15);
+}
+
+.stat-label {
+  font-weight: 400;
+  font-size: 1.3rem;
+  display: block;
+  margin-top: 0.5rem;
+  color: #00cec9cc;
+}
+
+/* Report Button Styling */
+.report-btn {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #00cec9, #00b6b6);
+  color: #000;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(0, 206, 201, 0.4);
+  transition: all 0.3s ease;
+}
+
+.report-btn:hover {
+  background: linear-gradient(135deg, #00b6b6, #00a8a8);
+  transform: translateY(-2px);
+}
+
+/* NEWS SECTION */
+.news-section {
+  background-color: rgba(0, 206, 201, 0.1); /* Same as Stats Section with similar transparency */
+  color: white;
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.news-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: #00cec9; /* Neon cyan for title (matching the stats section) */
+}
+
+.news-articles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.article {
+  background-color: #333; /* Dark background for each article */
+  color: white;
+  padding: 20px;
+  margin: 20px;
+  width: 30%;
+  border-radius: 10px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.article:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0, 206, 201, 0.5); /* Neon glow on hover */
+}
+
+.article-img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.article-content {
+  padding-top: 20px;
+}
+
+.article h3 {
+  font-size: 1.8rem;
+  color: #00cec9; /* Neon cyan for article title */
+}
+
+.article p {
+  font-size: 1.2rem;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.article a {
+  text-decoration: none;
+  font-size: 1.1rem;
+  color: #00cec9; /* Neon cyan for article links */
+  transition: color 0.3s ease;
+}
+
+.article a:hover {
+  color: #fff; /* On hover, change to white */
+}
+
+.footer {
+  background-color: #1a1a1a; /* Dark gray, not pure black */
+  color: #ccc;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-top: 3px solid #00cec9; /* Neon cyan border */
+}
+
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.footer h3 {
+  color: #00cec9;
+  margin-bottom: 15px;
+  font-weight: 700;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.footer-about p {
+  line-height: 1.5;
+  max-width: 300px;
+  color: #aaa;
+  font-size: 1rem;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links ul li {
+  margin-bottom: 12px;
+}
+
+.footer-links ul li a {
+  color: #ccc;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.footer-links ul li a:hover {
+  color: #00cec9;
+}
+
+.footer-social .social-icons a {
+  color: #ccc;
+  font-size: 1.4rem;
+  margin-right: 20px;
+  transition: color 0.3s ease;
+}
+
+.footer-social .social-icons a:hover {
+  color: #00cec9;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 25px;
+  font-size: 0.9rem;
+  color: #666;
+  border-top: 1px solid #333;
+  margin-top: 40px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-about p, 
+  .footer-links ul, 
+  .footer-social {
+    max-width: 100%;
+  }
+
+  .footer-social .social-icons a {
+    margin-right: 15px;
+  }
+}
+
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-section {
+    margin-bottom: 2rem;
+  }
+}
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        gap: 0.7rem;
+      }
+      .nav-links {
+        justify-content: center;
+      }
+      .hero-content h1 {
+        font-size: 2.2rem;
+      }
+      .hero-content p {
+        font-size: 1.1rem;
+      }
+      .info-section {
+        justify-content: center;
+      }
+      .info-card {
+        width: 90vw;
+        max-height: 280px;
+      }
+      .stats-section {
+        flex-direction: column;
+        gap: 2rem;
+      }
+      .stat {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav>
+  <div class="navbar-left">
+    <i class="fa-solid fa-city logo-icon"></i>
+    <div class="logo-text">City Civic Issue Reporter</div>
+  </div>
+  <div class="nav-links">
+    <a href="/dashboard" id="dashboard-link">Dashboard</a>
+    <a href="/add_grievance" id="add-grievance-link">Add Grievance</a>
+    <a href="/admin">Admin Panel</a>              <!-- Admin page -->
+    <a href="/feedback">Feedback Form</a>  <!-- Feedback page -->
+  </div>
+</nav>
+
+
+  <!-- SEARCH -->
+  <div class="full-width-search">
+    <form action="/search" method="GET">
+      <input type="text" name="query" placeholder="Search Issues by keyword or location..." required />
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <!-- SLIDESHOW -->
+  <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <img src="/static/images/slide1.jpg" alt="Public Cleanliness" />
+        <div class="slide-caption">
+          <h2>Keep Our Streets Clean</h2>
+          <p>Report overflowing bins and illegal dumping instantly!</p>
+        </div>
+      </div>
+      <div class="swiper-slide">
+        <img src="/static/images/slide2.jpg" alt="Pothole free roads" />
+        <div class="slide-caption">
+          <h2>Potholes? Let’s Fix Them Fast</h2>
+          <p>Report potholes to protect vehicles and pedestrians.</p>
+        </div>
+      </div>
+      <div class="swiper-slide">
+        <img src="/static/images/slide3.jpg" alt="Public Cleanliness" />
+        <div class="slide-caption">
+          <h2>Fight Garbage Pollution</h2>
+          <p> Help us maintain a greener, healthier city.</p>
+        </div>
+      </div>
+      <div class="swiper-slide">
+    <img src="/static/images/slide4.webp" alt="Report Water Leakage" />
+    <div class="slide-caption">
+      <h2>Smooth Roads, Safe Rides</h2>
+      <p> Help us keep roads safe and damage-free.</p>
+    </div>
+
+      </div>
+      <div class="swiper-slide">
+        <img src="/static/images/slide5.jpg" alt="Public Cleanliness" />
+        <div class="slide-caption">
+          <h2>Trash Trouble? Report It!</h2>
+          <p>Quick reporting means faster cleanup.</p>
+        </div>
+      </div>
+      <div class="swiper-slide">
+        <img src="/static/images/slide6.jpg" alt="Pothole free roads" />
+        <div class="slide-caption">
+          <h2>Patch It Up Quickly</h2>
+          <p>Your reports make pothole repairs a priority.</p>
+        </div>
+      </div>
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+
+  <!-- INFO SECTION -->
+ <section class="info-section">
+  <div class="info-card">
+    <h2>Why We Need This</h2>
+    <p>
+      Civic issues like potholes and waste impact our daily lives and safety. Reporting them helps the city act quickly, making neighborhoods cleaner and safer for everyone.
+    </p>
+  </div>
+
+  <div class="info-card">
+    <h2>What We Do</h2>
+    <p>
+      Our platform simplifies reporting by letting you easily submit issues. We connect your reports to the right city departments to ensure prompt responses and real improvements.
+    </p>
+  </div>
+
+  <div class="info-card">
+    <h2>How We Do It</h2>
+    <p>
+      Using AI and smart analytics, we prioritize issues based on urgency and location, helping city officials focus on what matters most. You get updates every step of the way.
+    </p>
+  </div>
+</section>
+
+
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Welcome to Your City's Civic Issue Reporter</h1>
+      <p><em>Empowering citizens to take part in making their city better, safer, and cleaner — one report at a time.</em></p>
+      <a href="/report" class="report-btn">
+  📢 Report a Grievance
+</a>
+
+    </div>
+  </section>
+
+  <div class="hero-divider">
+  <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
+    <path fill="#0f2027" d="M0,100 C480,0 960,0 1440,100 L1440,0 L0,0 Z"></path>
+  </svg>
+</div>
+
+
+  <!-- STATS SECTION -->
+  <section class="stats-section">
+  <div class="stat">
+    <span class="counter" data-target="1200">0</span>+
+    <span class="stat-label">Issues Reported</span>
+  </div>
+  <div class="stat">
+    <span class="counter" data-target="500">0</span>+
+    <span class="stat-label">Being Worked On</span>
+  </div>
+  <div class="stat">
+    <span class="counter" data-target="400">0</span>+
+    <span class="stat-label">Pending</span>
+  </div>
+  <div class="stat">
+    <span class="counter" data-target="300">0</span>+
+    <span class="stat-label">Resolved</span>
+  </div>
+</section>
+
+<!-- Testimonial Marquee Section -->
+<section class="testimonial-section">
+  <!-- Title -->
+  <h2 class="testimonial-heading">What Citizens Are Saying</h2>
+  
+  
+  <!-- Testimonial Marquee Bar -->
+  <div class="testimonial-marquee">
+    <div class="testimonial-items">
+      <div class="testimonial">"Pothole fixed within 3 days!" — <em>Aayush</em></div>
+      <div class="testimonial">"Super easy to use, made reporting a breeze." — <em>Meena</em></div>
+      <div class="testimonial">"Tracks updates — finally, real transparency!" — <em>Vikram</em></div>
+      <div class="testimonial">"Quick action, clean streets again!" — <em>Priya</em></div>
+      <div class="testimonial">"No more waiting in queues. Just report online!" — <em>Rakesh</em></div>
+    </div>
+  </div>
+</section>
+
+<!-- News Section -->
+<section class="news-section">
+  <h2>Meet the Heroes Behind the Scenes</h2>
+  <div class="news-articles">
+    <!-- First Article -->
+    <div class="article">
+      <img src="/static/images/worker1.jpg" alt="Sanitation Worker" class="article-img">
+      <div class="article-content">
+        <h3>Interview with Rajesh: Keeping Our Streets Clean</h3>
+        <p>"I’ve been working in sanitation for over 15 years. It's tough, but it feels good to make a difference."</p>
+        <a href="#">Read Full Interview</a>
+      </div>
+    </div>
+    
+    <!-- Second Article -->
+    <div class="article">
+      <img src="/static/images/worker2.jpeg" alt="Road Worker" class="article-img">
+      <div class="article-content">
+        <h3>Shivani: The Backbone of Road Construction</h3>
+        <p>"Building roads is a team effort. We work long hours to make sure the city runs smoothly."</p>
+        <a href="#">Read Full Interview</a>
+      </div>
+    </div>
+    
+    <!-- Third Article -->
+    <div class="article">
+      <img src="/static/images/worker3.jpg" alt="Road Builder" class="article-img">
+      <div class="article-content">
+        <h3>Ajay’s Journey: From the Ground Up</h3>
+        <p>"My job isn't easy, but seeing the progress we make keeps me going every day."</p>
+        <a href="#">Read Full Interview</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer Section -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-about">
+      <h3>About</h3>
+      <p>Empowering citizens with easy reporting and transparency for cleaner, safer cities.</p>
+    </div>
+    <div class="footer-links">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Report Issue</a></li>
+        <li><a href="#">Status</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-social">
+      <h3>Follow Us</h3>
+      <div class="social-icons">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    &copy; 2025 City civic issue reporter. All rights reserved.
+  </div>
+</footer>
+
+ 
+
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Hero slideshow
+  const mainSwiper = new Swiper(".mySwiper", {
+    loop: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false,
+    },
+    effect: "fade",
+    fadeEffect: { crossFade: true },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+  });
+
+  // Testimonials ticker
+  const testimonialsSwiper = new Swiper(".testimonial-swiper", {
+    slidesPerView: 'auto',
+    freeMode: true,
+    loop: true,
+    speed: 5000,
+    autoplay: {
+      delay: 0,
+      disableOnInteraction: false,
+    },
+  });
+
+  // Other Swiper
+  const otherSwiper = new Swiper(".other-swiper", {
+    slidesPerView: 3,
+    loop: true,
+    autoplay: {
+      delay: 3000,
+    },
+    spaceBetween: 20,
+    breakpoints: {
+      0: { slidesPerView: 1 },
+      640: { slidesPerView: 2 },
+      1024: { slidesPerView: 3 },
+    },
+  });
+
+  // Counter animation
+  const counters = document.querySelectorAll('.counter');
+  const speed = 200;
+
+  function animateCounters() {
+    counters.forEach(counter => {
+      const target = +counter.getAttribute('data-target');
+      const updateCount = () => {
+        const count = +counter.innerText.replace(/,/g, '');
+        const increment = Math.ceil(target / speed);
+
+        if (count < target) {
+          counter.innerText = count + increment;
+          setTimeout(updateCount, 20);
+        } else {
+          counter.innerText = target.toLocaleString();
+        }
+      };
+      updateCount();
+    });
+  }
+
+  const statsSection = document.querySelector('.stats-section');
+  let hasAnimated = false;
+
+  window.addEventListener('scroll', () => {
+    const top = statsSection.getBoundingClientRect().top;
+    if (!hasAnimated && top < window.innerHeight - 100) {
+      hasAnimated = true;
+      animateCounters();
+    }
+  });
+
+  // Dashboard button redirect (if you have a dashboardBtn)
+  const dashboardBtn = document.getElementById('dashboardBtn');
+  if (dashboardBtn) {
+    dashboardBtn.addEventListener('click', () => {
+      const city = localStorage.getItem('city');
+      const area = localStorage.getItem('area');
+      if (city && area) {
+        window.location.href = `/dashboard?city=${encodeURIComponent(city)}&area=${encodeURIComponent(area)}`;
+      } else {
+        alert('Please login first.');
+        window.location.href = "/auth";  // Changed here from /login to /auth
+      }
+    });
+  }
+
+  // Protect links for dashboard and add grievance
+  function protectLink(linkId, targetPage) {
+    const link = document.getElementById(linkId);
+    if (link) {
+      link.addEventListener('click', function (e) {
+        const city = localStorage.getItem('city');
+        const area = localStorage.getItem('area');
+        if (!city || !area) {
+          e.preventDefault();
+          alert('Please log in to access this page.');
+          window.location.href = `/auth?next=${encodeURIComponent(targetPage)}`;  // Changed here
+        }
+      });
+    }
+  }
+
+  protectLink('dashboard-link', '/dashboard');
+  protectLink('add-grievance-link', '/add_grievance');
+});
+
+// Utility function for dashboard redirect if needed elsewhere
+function goToDashboard() {
+  const city = localStorage.getItem("city");
+  const area = localStorage.getItem("area");
+
+  if (city && area) {
+    window.location.href = `/dashboard?city=${encodeURIComponent(city)}&area=${encodeURIComponent(area)}`;
+  } else {
+    window.location.href = "/auth";  // Changed here
+  }
+}
+
+</script>
+</body>
+</html>

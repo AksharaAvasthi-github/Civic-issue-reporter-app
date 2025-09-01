@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Employee Login / Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0a0a0a;
+      color: white;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .auth-container {
+      background-color: #111;
+      box-shadow: 0 0 25px rgba(0, 206, 201, 0.5);
+      width: 100%;
+      max-width: 400px;
+      padding: 40px 30px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .toggle-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 30px;
+    }
+
+    .toggle-buttons button {
+      background: none;
+      border: none;
+      color: #00cec9;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 5px;
+      transition: border-color 0.3s;
+    }
+
+    .toggle-buttons button.active {
+      border-color: #00cec9;
+      font-weight: bold;
+    }
+
+    form {
+      display: none;
+      flex-direction: column;
+    }
+
+    form.active {
+      display: flex;
+    }
+
+    input, select {
+      padding: 14px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+    }
+
+    input[type='submit'], button[type='submit'] {
+      background-color: #00cec9;
+      color: #000;
+      font-weight: bold;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      border: none;
+      border-radius: 6px;
+      padding: 14px;
+    }
+
+    .message {
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="toggle-buttons">
+      <button id="loginBtn" class="active">Login</button>
+      <button id="signupBtn">Sign Up</button>
+    </div>
+
+    <!-- Login Form -->
+<!-- Login Form -->
+<form id="loginForm" action="/employee_login" method="post" class="active">
+  <input type="text" id="employee_id" name="employee_id" placeholder="Employee ID" required />
+  <input type="password" id="password" name="password" placeholder="Password" required />
+  
+  <div class="message" id="loginMessage"></div>
+  <button type="submit">Login</button>
+</form>
+
+    <!-- Sign Up Form -->
+    <form id="signupForm" action="/employee_signup" method="post" enctype="multipart/form-data">
+
+      <input type="text" name="employee_id" placeholder="Employee ID" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <select name="department" required>
+        <option value="">Select Department</option>
+        <option value="garbage">Garbage</option>
+        <option value="pothole">Pothole</option>
+      </select>
+      <select name="city" required>
+        <option value="">Select City</option>
+        <option value="city1">City 1</option>
+        <option value="city2">City 2</option>
+      </select>
+      <select name="area" required>
+        <option value="">Select Area</option>
+        <option value="area1">Area 1</option>
+        <option value="area2">Area 2</option>
+        <option value="area3">Area 3</option>
+      </select>
+      <div class="message" id="signupMessage"></div>
+      <input type="submit" value="Sign Up" />
+    </form>
+  </div>
+
+  <script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const nextPage = urlParams.get('next') || "{{ next }}";
+const loginBtn = document.getElementById('loginBtn');
+const signupBtn = document.getElementById('signupBtn');
+const loginForm = document.getElementById('loginForm');
+const signupForm = document.getElementById('signupForm');
+const loginMsg = document.getElementById('loginMessage');
+const signupMsg = document.getElementById('signupMessage');
+
+// Toggle forms
+loginBtn.addEventListener('click', () => {
+  loginForm.classList.add('active');
+  signupForm.classList.remove('active');
+  loginBtn.classList.add('active');
+  signupBtn.classList.remove('active');
+  loginMsg.textContent = "";
+  signupMsg.textContent = "";
+});
+
+signupBtn.addEventListener('click', () => {
+  signupForm.classList.add('active');
+  loginForm.classList.remove('active');
+  signupBtn.classList.add('active');
+  loginBtn.classList.remove('active');
+  loginMsg.textContent = "";
+  signupMsg.textContent = "";
+});
+
+
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const loginData = {
+    employee_id: loginForm.employee_id.value,
+    password: loginForm.password.value
+  };
+
+  try {
+    const response = await fetch('/employee_login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(loginData),
+      credentials: 'include'
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      // Save info to localStorage
+      localStorage.setItem('employee_id', result.employee_id);
+      localStorage.setItem('department', result.department);
+      localStorage.setItem('city', result.city);
+      localStorage.setItem('area', result.area);
+
+      // ✅ Redirect to admin dashboard
+      window.location.href = nextPage;  // NEW — redirects properly
+
+    } else {
+      loginMsg.style.color = 'red';
+      loginMsg.textContent = result.detail || 'Login failed';
+    }
+  } catch (err) {
+    loginMsg.style.color = 'red';
+    loginMsg.textContent = 'An error occurred: ' + err.message;
+    console.error("Login error:", err);
+  }
+});
+// Force the URL to /auth without query params on login page load
+if (window.location.pathname === '/auth') {
+  window.history.replaceState({}, '', '/auth');
+}
+
+
+
+// Test ping
+signupForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  // Collect form inputs into an object
+  const formData = {
+    employee_id: signupForm.employee_id.value,
+    password: signupForm.password.value,
+    department: signupForm.department.value,
+    city: signupForm.city.value,
+    area: signupForm.area.value
+  };
+
+  try {
+    const response = await fetch('http://127.0.0.1:8000/employee_signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+      credentials: 'include'
+    });
+
+    const result = await response.json();
+    console.log("Signup response:", result);
+
+    if (response.ok) {
+      signupMsg.style.color = 'lightgreen';
+      signupMsg.textContent = 'Signup successful! Please login.';
+    } else {
+      signupMsg.style.color = 'red';
+      signupMsg.textContent = result.detail || 'Signup failed';
+    }
+  } catch (err) {
+    signupMsg.style.color = 'red';
+    signupMsg.textContent = 'An error occurred';
+    console.error("Signup error:", err);
+  }
+});
+
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login / Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
+  <style>  * {
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0a0a0a;
+  color: white;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-container {
+  background-color: #111;
+  box-shadow: 0 0 25px rgba(0, 206, 201, 0.5);
+  width: 100%;
+  max-width: 400px;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.toggle-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
+}
+
+.toggle-buttons button {
+  background: none;
+  border: none;
+  color: #00cec9;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 5px;
+  transition: border-color 0.3s;
+}
+
+.toggle-buttons button.active {
+  border-color: #00cec9;
+  font-weight: bold;
+}
+
+form {
+  display: none;
+  flex-direction: column;
+}
+
+form.active {
+  display: flex;
+}
+
+input, select {
+  padding: 14px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+}
+
+input[type='submit'] {
+  background-color: #00cec9;
+  color: #000;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.message {
+  text-align: center;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="toggle-buttons">
+      <button id="loginBtn" class="active">Login</button>
+      <button id="signupBtn">Sign Up</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="loginForm" class="active">
+      <input type="text" name="username" placeholder="Username" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <div class="message" id="loginMessage"></div>
+      <input type="submit" value="Login" />
+    </form>
+
+    <!-- Sign Up Form -->
+    <form id="signupForm">
+      <input type="text" name="username" placeholder="Choose Username" required />
+      <input type="password" name="password" placeholder="Choose Password" required />
+      <select name="city" required>
+        <option value="">Select City</option>
+        <option value="city1">City 1</option>
+        <option value="city2">City 2</option>
+      </select>
+      <select name="area" required>
+        <option value="">Select Area</option>
+        <option value="area1">Area 1</option>
+        <option value="area2">Area 2</option>
+        <option value="area3">Area 3</option>
+      </select>
+      <div class="message" id="signupMessage"></div>
+      <input type="submit" value="Sign Up" />
+    </form>
+  </div>
+
+  <script>
+  // Get the 'next' param from the URL query string, default to "/dashboard"
+  const urlParams = new URLSearchParams(window.location.search);
+  const nextPage = urlParams.get('next') || '/dashboard';
+
+  const loginBtn = document.getElementById('loginBtn');
+  const signupBtn = document.getElementById('signupBtn');
+  const loginForm = document.getElementById('loginForm');
+  const signupForm = document.getElementById('signupForm');
+  const loginMsg = document.getElementById('loginMessage');
+  const signupMsg = document.getElementById('signupMessage');
+
+  // Toggle between login and signup forms
+  loginBtn.addEventListener('click', () => {
+    loginForm.classList.add('active');
+    signupForm.classList.remove('active');
+    loginBtn.classList.add('active');
+    signupBtn.classList.remove('active');
+    loginMsg.textContent = "";
+    signupMsg.textContent = "";
+  });
+
+  signupBtn.addEventListener('click', () => {
+    signupForm.classList.add('active');
+    loginForm.classList.remove('active');
+    signupBtn.classList.add('active');
+    loginBtn.classList.remove('active');
+    loginMsg.textContent = "";
+    signupMsg.textContent = "";
+  });
+
+  // LOGIN SUBMIT
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(loginForm);
+    const payload = {
+      username: formData.get('username'),
+      password: formData.get('password')
+    };
+
+    try {
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload),
+        credentials: 'include'  // Important to allow cookies!
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Set cookies here using city and area from response
+    
+        // Optional localStorage (for JS checks)
+        localStorage.setItem('username', result.username);
+        localStorage.setItem('city', result.city);
+        localStorage.setItem('area', result.area);
+
+        // Redirect to the 'next' page or dashboard
+        window.location.href = nextPage;
+      } else {
+        loginMsg.style.color = 'red';
+        loginMsg.textContent = result.detail || 'Login failed';
+      }
+    } catch (err) {
+      loginMsg.style.color = 'red';
+      loginMsg.textContent = 'An error occurred';
+    }
+  });
+
+  // SIGNUP SUBMIT
+  signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(signupForm);
+    const payload = {
+      username: formData.get('username'),
+      password: formData.get('password'),
+      city: formData.get('city'),
+      area: formData.get('area')
+    };
+
+    try {
+      const response = await fetch('/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        signupMsg.style.color = 'lightgreen';
+        signupMsg.textContent = 'Signup successful! Redirecting...';
+        setTimeout(() => {
+          // After signup success, switch to login form so user can login
+          signupForm.classList.remove('active');
+          loginForm.classList.add('active');
+          signupBtn.classList.remove('active');
+          loginBtn.classList.add('active');
+          signupMsg.textContent = '';
+          loginMsg.textContent = 'Please login with your new credentials.';
+          loginMsg.style.color = 'lightgreen';
+        }, 1000);
+      } else {
+        signupMsg.style.color = 'red';
+        signupMsg.textContent = result.detail || 'Signup failed';
+      }
+    } catch (err) {
+      signupMsg.style.color = 'red';
+      signupMsg.textContent = 'An error occurred';
+    }
+  });
+  </script>
+</body>
+</html>
